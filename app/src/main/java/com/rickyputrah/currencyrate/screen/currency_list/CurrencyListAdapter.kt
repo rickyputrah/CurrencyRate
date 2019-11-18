@@ -1,5 +1,7 @@
 package com.rickyputrah.currencyrate.screen.currency_list
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +11,8 @@ import com.rickyputrah.currencyrate.helper.setDebounceClickListener
 import kotlinx.android.synthetic.main.currency_list_item.view.*
 
 
-class CurrencyListAdapter : RecyclerView.Adapter<CurrencyListAdapter.ViewHolder>() {
+class CurrencyListAdapter(private val callback: OnFirstItemChanged) :
+    RecyclerView.Adapter<CurrencyListAdapter.ViewHolder>() {
 
     private var currencyRateList: MutableList<CurrencyItemViewModel> = mutableListOf()
 
@@ -23,6 +26,11 @@ class CurrencyListAdapter : RecyclerView.Adapter<CurrencyListAdapter.ViewHolder>
         return currencyRateList.size
     }
 
+    override fun getItemId(position: Int): Long {
+        val itemViewModel = currencyRateList[position]
+        return itemViewModel.currencyId
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currencyItem = currencyRateList.getOrNull(position)
         holder.setupView(currencyItem)
@@ -30,7 +38,7 @@ class CurrencyListAdapter : RecyclerView.Adapter<CurrencyListAdapter.ViewHolder>
 
     fun updateCurrencyList(currencyItemList: MutableList<CurrencyItemViewModel>) {
         this.currencyRateList = currencyItemList
-        notifyDataSetChanged()
+        notifyItemRangeChanged(1, currencyItemList.size)
     }
 
     inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view.rootView) {
@@ -38,7 +46,8 @@ class CurrencyListAdapter : RecyclerView.Adapter<CurrencyListAdapter.ViewHolder>
         fun setupView(currencyItem: CurrencyItemViewModel?) {
             currencyItem?.also {
                 view.textCurrencyCode.text = it.currencyCode
-                view.textCurrencyName.text = it.currencyCode
+                view.textCurrencyName.text = it.currencyName
+                view.editTextCurrency.setText(it.displayValue)
             }
             setupListener(view)
         }
@@ -48,6 +57,21 @@ class CurrencyListAdapter : RecyclerView.Adapter<CurrencyListAdapter.ViewHolder>
             view.editTextCurrency.setOnFocusChangeListener { v, hasFocus ->
                 if (hasFocus) moveUp()
             }
+            view.editTextCurrency.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    charSequence: CharSequence, i: Int,
+                    i1: Int, i2: Int
+                ) {
+                }
+
+                override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+
+                override fun afterTextChanged(editable: Editable) {
+                    if (layoutPosition == 0) {
+                        callback.onFirstItemAmountChanged(editable.toString())
+                    }
+                }
+            })
         }
 
         private fun moveUp() {
@@ -56,6 +80,7 @@ class CurrencyListAdapter : RecyclerView.Adapter<CurrencyListAdapter.ViewHolder>
                     currencyRateList.add(0, it)
                 }
                 notifyItemMoved(currentPosition, 0)
+                callback.onFirstItemChanged()
             }
         }
     }

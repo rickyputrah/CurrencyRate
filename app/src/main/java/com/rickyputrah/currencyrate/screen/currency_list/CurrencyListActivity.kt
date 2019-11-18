@@ -1,6 +1,7 @@
 package com.rickyputrah.currencyrate.screen.currency_list
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -8,10 +9,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.rickyputrah.currencyrate.R
 import com.rickyputrah.currencyrate.di.ViewModelFactory
 import com.rickyputrah.currencyrate.di.getApplicationComponent
+import com.rickyputrah.currencyrate.helper.toVisibility
 import kotlinx.android.synthetic.main.currency_list_activity.*
 import javax.inject.Inject
 
-class CurrencyListActivity : AppCompatActivity() {
+class CurrencyListActivity : AppCompatActivity(), OnFirstItemChanged {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -28,9 +30,20 @@ class CurrencyListActivity : AppCompatActivity() {
         setupToolbar()
     }
 
+    override fun onFirstItemAmountChanged(amount: String) {
+        viewModel.updateBaseValue(amount)
+        viewModel.loadCurrencyRateList()
+    }
+
+    override fun onFirstItemChanged() {
+        viewModel.loadCurrencyRateListInterval()
+    }
+
     private fun setupAdapter() {
-        currencyListAdapter = CurrencyListAdapter()
+        currencyListAdapter = CurrencyListAdapter(this)
+        currencyListAdapter.setHasStableIds(true)
         currencyListRecylerView.layoutManager = LinearLayoutManager(this)
+        currencyListRecylerView.isNestedScrollingEnabled = false
         currencyListRecylerView.adapter = currencyListAdapter
     }
 
@@ -39,8 +52,16 @@ class CurrencyListActivity : AppCompatActivity() {
             ViewModelProviders.of(this, viewModelFactory).get(CurrencyListViewModel::class.java)
         viewModel.loadCurrencyRateList()
         viewModel.currencyList.observe(this, Observer {
-            currencyListAdapter.updateCurrencyList(it)
+            setupView(it)
+            viewModel.loadCurrencyRateListInterval()
         })
+    }
+
+    private fun setupView(currencyList: MutableList<CurrencyItemViewModel>) {
+        currencyListRecylerView.visibility = currencyList.isNotEmpty().toVisibility()
+        textRateTitle.visibility = currencyList.isNotEmpty().toVisibility()
+        currencyListAdapter.updateCurrencyList(currencyList)
+        progressBar.visibility = View.GONE
     }
 
     private fun injectComponent() {
@@ -50,5 +71,4 @@ class CurrencyListActivity : AppCompatActivity() {
     private fun setupToolbar() {
         supportActionBar?.hide()
     }
-
 }

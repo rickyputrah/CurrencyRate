@@ -1,6 +1,5 @@
 package com.rickyputrah.currencyrate.helper
 
-import android.util.Log
 import com.rickyputrah.currencyrate.BuildConfig
 
 fun Exception.log() {
@@ -13,7 +12,6 @@ fun Throwable.log() {
 
 private fun logError(throwable: Throwable) {
     if (BuildConfig.DEBUG) {
-        Log.e(throwable.javaClass.name, throwable.message)
         throwable.printStackTrace()
     }
 }
