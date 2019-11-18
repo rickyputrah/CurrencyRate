@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class CurrencyRateProvider @Inject constructor(private val currencyRateApi: CurrencyRateApi) {
 
-    fun loadCategories(baseCurrency: String = ""): Observable<CurrencyRateResponse> {
+    fun getCurrencyRateList(baseCurrency: String): Observable<CurrencyRateResponse> {
         return currencyRateApi.getCurrencyRate(baseCurrency).observeOn(Schedulers.io())
     }
 }
