@@ -1,0 +1,53 @@
+android {
+
+    compileSdkVersion versions.projects.compileSdk
+    buildToolsVersion versions.projects.buildTools
+
+    defaultConfig {
+        minSdkVersion versions.projects.minSdk
+        targetSdkVersion versions.projects.targetSdk
+
+        defaultPublishConfig 'release'
+
+        versionName versions.projects.versionName
+        versionCode versions.projects.versionCode
+
+        vectorDrawables.useSupportLibrary = true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath = false
+            }
+        }
+    }
+
+
+    buildTypes {
+        debug {
+            debuggable true
+            aaptOptions.cruncherEnabled = false
+        }
+        staging {
+            debuggable true
+            matchingFallbacks = ['debug']
+        }
+        release {
+            aaptOptions.cruncherEnabled = true
+        }
+    }
+
+    flavorDimensions versions.projects.flavorDimensions.normal
+
+    productFlavors {
+        general {
+            minSdkVersion versions.projects.minSdk
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+

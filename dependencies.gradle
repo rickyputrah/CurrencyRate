@@ -1,0 +1,90 @@
+ext.versions = [
+        projects : [
+                versionCode     : 1,
+                versionName     : '1.0.0',
+                minSdk          : 21,
+                targetSdk       : 28,
+                compileSdk      : 28,
+                gradle          : '3.4.2',
+                buildTools      : '28.0.3',
+                flavorDimensions: [
+                        normal: "normal"
+                ]
+        ],
+        libraries: [
+                gms_base            : '17.0.0',
+                kotlin_version      : '1.3.50',
+
+                lifecycle_version   : '2.0.0',
+                livedata            : '2.1.0',
+
+                android_support     : '28.0.0',
+                constraint_layout   : '1.1.3',
+                material            : '1.0.0',
+
+                retrofit            : '2.6.0',
+                retrofit_logging    : '4.2.1',
+
+                dagger2             : '2.4',
+
+                rx_java2            : '2.2.0',
+                rx_java2_android    : '2.1.0',
+
+                junit               : '4.12',
+                mockk               : '1.9',
+                arc_core_testing    : '1.1.1',
+
+                espresso            : '3.1.0',
+                test_runner         : '1.1.0',
+
+                glide               : '4.9.0',
+        ]
+]
+
+
+ext.libraries = [
+        gms_base            : "com.google.android.gms:play-services-base:$versions.libraries.gms_base",
+        kotlin_version      : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.libraries.kotlin_version",
+
+        // Support Design
+        android_support     : "com.android.support:design:$versions.libraries.android_support",
+
+        //Material
+        material            : "com.google.android.material:material:$versions.libraries.material",
+
+        //App Compat
+        appcompat           : "com.android.support:appcompat-v7:$versions.libraries.android_support",
+
+        // RecyclerView
+        recyclerview        : "com.android.support:recyclerview-v7:$versions.libraries.android_support",
+
+        // Constraint Layout
+        constraint_layout   : "com.android.support.constraint:constraint-layout:$versions.libraries.constraint_layout",
+
+        // LiveData & ViewModel
+        lifecycle_version   : "android.arch.lifecycle:extensions:$versions.libraries.lifecycle_version",
+        livedata            : "androidx.lifecycle:lifecycle-livedata-ktx:$versions.libraries.livedata",
+
+        // Retrofit
+        retrofit            : "com.squareup.retrofit2:retrofit:$versions.libraries.retrofit",
+        retrofit_adapter    : "com.squareup.retrofit2:adapter-rxjava2:$versions.libraries.retrofit",
+        retrofit_moshi      : "com.squareup.retrofit2:converter-moshi:$versions.libraries.retrofit",
+        retrofit_logging    : "com.squareup.okhttp3:logging-interceptor:$versions.libraries.retrofit_logging",
+
+        // Dagger 2
+        dagger2             : "com.google.dagger:dagger:$versions.libraries.dagger2",
+        dagger2_compiler    : "com.google.dagger:dagger-compiler:$versions.libraries.dagger2",
+
+        //Rx Java
+        rx_java2            : "io.reactivex.rxjava2:rxjava:$versions.libraries.rx_java2",
+        rx_java2_android    : "io.reactivex.rxjava2:rxandroid:$versions.libraries.rx_java2_android",
+
+        //Testing
+        junit               : "junit:junit:$versions.libraries.junit",
+        mockk               : "io.mockk:mockk:$versions.libraries.mockk",
+        arc_core_testing    : "android.arch.core:core-testing:$versions.libraries.arc_core_testing",
+
+        // UI Testing
+        espresso_core       : "androidx.test.espresso:espresso-core:$versions.libraries.espresso",
+        test_runner         : "androidx.test:runner:$versions.libraries.test_runner",
+]
