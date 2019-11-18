@@ -53,9 +53,10 @@ class CurrencyListAdapter(private val callback: OnFirstItemChanged) :
         }
 
         private fun setupListener(view: View) {
-            view.setDebounceClickListener { view.editTextCurrency.requestFocus() }
-            view.editTextCurrency.setOnFocusChangeListener { v, hasFocus ->
-                if (hasFocus) moveUp()
+            view.setDebounceClickListener { moveUp(view) }
+            view.editTextCurrency.setOnTouchListener { _, _ ->
+                moveUp(view)
+                false
             }
             view.editTextCurrency.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
@@ -74,13 +75,14 @@ class CurrencyListAdapter(private val callback: OnFirstItemChanged) :
             })
         }
 
-        private fun moveUp() {
+        private fun moveUp(view: View) {
             layoutPosition.takeIf { it > 0 }?.also { currentPosition ->
                 currencyRateList.removeAt(currentPosition).also {
                     currencyRateList.add(0, it)
                 }
                 notifyItemMoved(currentPosition, 0)
                 callback.onFirstItemChanged()
+                view.editTextCurrency.requestFocus()
             }
         }
     }
