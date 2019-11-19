@@ -47,7 +47,6 @@ class CurrencyRateServiceTest {
         //When
         rateService.getCurrencyRateList(baseCurrency)
 
-
         //Then
         verify { mockCurrencyRateProvider.getCurrencyRateList(baseCurrency) }
     }
