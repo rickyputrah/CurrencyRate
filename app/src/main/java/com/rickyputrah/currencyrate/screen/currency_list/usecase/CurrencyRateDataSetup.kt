@@ -3,25 +3,28 @@ package com.rickyputrah.currencyrate.screen.currency_list.usecase
 import com.rickyputrah.currencyrate.constant.CURRENCY_NAMES
 import com.rickyputrah.currencyrate.constant.DEFAULT_CURRENCY_VALUE
 import com.rickyputrah.currencyrate.helper.currencyFormatter
+import com.rickyputrah.currencyrate.helper.getCurrencyStringValue
 import com.rickyputrah.currencyrate.model.currencyrate.CurrencyRateResponse
 import com.rickyputrah.currencyrate.screen.currency_list.CurrencyItemViewModel
-import com.rickyputrah.currencyrate.screen.currency_list.CurrencyListViewModel
 import javax.inject.Inject
 
 class CurrencyRateDataSetup @Inject constructor() {
 
     fun handleCurrencyRateResponse(
         response: CurrencyRateResponse,
-        viewModel: CurrencyListViewModel,
-        baseValue: Double
-    ) {
-        val currencyList = viewModel.currencyList.value ?: mutableListOf()
+        currencyItemList: MutableList<CurrencyItemViewModel>?
+    ): MutableList<CurrencyItemViewModel> {
+        val currencyList = currencyItemList ?: mutableListOf()
+        val currencyBaseValue = currencyList.getOrNull(0)?.displayValue?.getCurrencyStringValue()
+            ?: DEFAULT_CURRENCY_VALUE
+
         if (currencyList.isNullOrEmpty()) {
-            prepareEmptyCurrencyList(response, currencyList, baseValue)
+            prepareEmptyCurrencyList(response, currencyList, currencyBaseValue)
         } else {
-            updateCurrencyList(response, currencyList, baseValue)
+            updateCurrencyList(response, currencyList, currencyBaseValue)
         }
-        viewModel.currencyList.postValue(currencyList)
+
+        return currencyList
     }
 
     private fun prepareEmptyCurrencyList(
@@ -49,7 +52,6 @@ class CurrencyRateDataSetup @Inject constructor() {
             )
         )
         currencyList.addAll(rateList)
-
     }
 
     private fun updateCurrencyList(
